@@ -24,4 +24,3 @@ def index():
 
 # Include the api_router which includes news routes
 app.include_router(api_router)
-print("Registered Routes:", app.routes)
