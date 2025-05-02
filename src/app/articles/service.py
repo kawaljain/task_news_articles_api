@@ -1,39 +1,21 @@
-from fastapi import FastAPI,HTTPException,APIRouter
-from config.app import AppSettings
-import httpx
 from typing import Optional
-from fastapi.middleware.cors import CORSMiddleware
+import httpx
+from fastapi import HTTPException
+from app.core.appSettings import appSettings  # or wherever you store config
 
-appSettings = AppSettings()
-app = FastAPI()
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"], 
-    allow_methods=["*"], 
-    allow_headers=["*"], 
-)
 
-api_router = APIRouter(prefix="/api/v1")
-
-@app.get('/')
-def index():
-    return {"message":"This is Welcome Test"}
-
-@api_router.get('/')
-def index():
-    return {"message":"This is Welcome Test"}
-
-@api_router.get('/news/search')
-async def search(name: Optional[str] = None):
+async def getArticlesByName(name: Optional[str] = None):
 
     if not name:
         raise HTTPException(status_code=400, detail="Name is required")
 
     url = appSettings.SERPER_API_URL
+
     headers = {
         "X-API-KEY": appSettings.SERPER_API_KEY,
         "Content-Type": "application/json", 
     }
+
     payload ={
         "q": name
     }
@@ -51,6 +33,6 @@ async def search(name: Optional[str] = None):
             # Log and other action done here. use for debug And Store logs in db
             print(e)
             raise HTTPException(status_code=500, detail="API Error: Something Went Wrong Try after some time")
-    return {"message":f"This is Welcome {user}"}
     
-app.include_router(api_router)
+    return HTTPException(status_code=500, detail="API Error: Something Went Wrong Try after some time")
+    
