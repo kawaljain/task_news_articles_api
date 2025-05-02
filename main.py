@@ -1,7 +1,9 @@
-from fastapi import FastAPI 
-from pydantic import BaseModel 
+from fastapi import FastAPI  
+from config.app import AppSettings;
 
+appSettings = AppSettings()
 app = FastAPI()
+
 
 @app.get('/')
 def index():
